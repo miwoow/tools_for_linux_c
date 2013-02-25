@@ -21,6 +21,15 @@ typedef struct _rc_config
 	char name[BUF_LEN];
 }rc_config;
 
+typedef struct _rc_event
+{
+	char name[BUF_LEN];
+	char tag[BUF_LEN];
+	time_t s_time;
+	time_t e_time;
+	char id[BUF_LEN];
+}rc_event;
+
 #endif
 
 

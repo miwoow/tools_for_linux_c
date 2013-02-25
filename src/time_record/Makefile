@@ -67,7 +67,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_timeflow_OBJECTS = main.$(OBJEXT) rc_cmd.$(OBJEXT)
+am_timeflow_OBJECTS = main.$(OBJEXT) rc_cmd.$(OBJEXT) \
+	rc_utils.$(OBJEXT)
 timeflow_OBJECTS = $(am_timeflow_OBJECTS)
 timeflow_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.
@@ -188,8 +189,8 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-timeflow_SOURCES = main.c rc_cmd.c
-EXTRA_DIST = ./include/rc_cmd.h ./include/rc_type.h
+timeflow_SOURCES = main.c rc_cmd.c rc_utils.c
+EXTRA_DIST = ./include/rc_cmd.h ./include/rc_type.h ./include/rc_utils.h
 INCLUDES = -I./include
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -297,6 +298,7 @@ distclean-compile:
 
 include ./$(DEPDIR)/main.Po
 include ./$(DEPDIR)/rc_cmd.Po
+include ./$(DEPDIR)/rc_utils.Po
 
 .c.o:
 	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
