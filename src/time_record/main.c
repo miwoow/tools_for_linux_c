@@ -4,6 +4,7 @@
 #include "rc_cmd.h"
 #include "rc_db.h"
 #include "rc_utils.h"
+#include "ks_log.h"
 
 #include <time.h>
 
@@ -25,6 +26,8 @@ start_event(rc_config config, rc_event *event)
 int
 main(int argc, char **argv)
 {
+
+	ks_log_init("/tmp/xd.log", KS_LOG_LEVEL_DEBUG);
 	rc_config config;
 	rc_event event;
 	memset(&config, 0, sizeof(rc_config));
@@ -43,5 +46,6 @@ main(int argc, char **argv)
 		case 2:
 		break;
 	}
+	ks_log_exit();
 	return 0;
 }

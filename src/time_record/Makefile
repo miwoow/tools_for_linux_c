@@ -69,7 +69,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_timeflow_OBJECTS = timeflow-main.$(OBJEXT) \
 	timeflow-rc_cmd.$(OBJEXT) timeflow-rc_utils.$(OBJEXT) \
-	timeflow-rc_db.$(OBJEXT)
+	timeflow-rc_db.$(OBJEXT) timeflow-ks_log.$(OBJEXT)
 timeflow_OBJECTS = $(am_timeflow_OBJECTS)
 timeflow_LDADD = $(LDADD)
 timeflow_LINK = $(CCLD) $(timeflow_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
@@ -192,9 +192,9 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-timeflow_SOURCES = main.c rc_cmd.c rc_utils.c rc_db.c
+timeflow_SOURCES = main.c rc_cmd.c rc_utils.c rc_db.c ks_log.c
 timeflow_CFLAGS = --std=c99 -lmongoc
-EXTRA_DIST = ./include/rc_cmd.h ./include/rc_type.h ./include/rc_utils.h ./include/rc_db.c
+EXTRA_DIST = ./include/rc_cmd.h ./include/rc_type.h ./include/rc_utils.h ./include/rc_db.c ./include/ks_log.h
 INCLUDES = -I./include
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -300,6 +300,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/timeflow-ks_log.Po
 include ./$(DEPDIR)/timeflow-main.Po
 include ./$(DEPDIR)/timeflow-rc_cmd.Po
 include ./$(DEPDIR)/timeflow-rc_db.Po
@@ -374,6 +375,20 @@ timeflow-rc_db.obj: rc_db.c
 #	source='rc_db.c' object='timeflow-rc_db.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -c -o timeflow-rc_db.obj `if test -f 'rc_db.c'; then $(CYGPATH_W) 'rc_db.c'; else $(CYGPATH_W) '$(srcdir)/rc_db.c'; fi`
+
+timeflow-ks_log.o: ks_log.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -MT timeflow-ks_log.o -MD -MP -MF $(DEPDIR)/timeflow-ks_log.Tpo -c -o timeflow-ks_log.o `test -f 'ks_log.c' || echo '$(srcdir)/'`ks_log.c
+	$(am__mv) $(DEPDIR)/timeflow-ks_log.Tpo $(DEPDIR)/timeflow-ks_log.Po
+#	source='ks_log.c' object='timeflow-ks_log.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -c -o timeflow-ks_log.o `test -f 'ks_log.c' || echo '$(srcdir)/'`ks_log.c
+
+timeflow-ks_log.obj: ks_log.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -MT timeflow-ks_log.obj -MD -MP -MF $(DEPDIR)/timeflow-ks_log.Tpo -c -o timeflow-ks_log.obj `if test -f 'ks_log.c'; then $(CYGPATH_W) 'ks_log.c'; else $(CYGPATH_W) '$(srcdir)/ks_log.c'; fi`
+	$(am__mv) $(DEPDIR)/timeflow-ks_log.Tpo $(DEPDIR)/timeflow-ks_log.Po
+#	source='ks_log.c' object='timeflow-ks_log.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -c -o timeflow-ks_log.obj `if test -f 'ks_log.c'; then $(CYGPATH_W) 'ks_log.c'; else $(CYGPATH_W) '$(srcdir)/ks_log.c'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
