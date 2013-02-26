@@ -9,7 +9,6 @@ AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CC
-
 # Checks for libraries.
 
 # Checks for header files.

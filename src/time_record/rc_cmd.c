@@ -11,6 +11,7 @@ int
 rc_parse_cmd(int argc, char **argv, rc_config *config)
 {
 	int c, i;
+	tag *one_tag;
 	int option_index;
 	static struct option long_options[] = {
 		{"action", required_argument, 0, 0},
@@ -34,7 +35,10 @@ rc_parse_cmd(int argc, char **argv, rc_config *config)
 				} 
 				break;
 			case 'g':
-				strncpy(config->tag, optarg, BUF_LEN);
+				one_tag = (tag *)malloc(sizeof(tag));
+				strncpy(one_tag->name, optarg, BUF_LEN);
+				one_tag->next = config->tags;
+				config->tags = one_tag;
 				break;
 			case 'n':
 				strncpy(config->name, optarg, BUF_LEN);

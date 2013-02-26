@@ -67,10 +67,13 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_timeflow_OBJECTS = main.$(OBJEXT) rc_cmd.$(OBJEXT) \
-	rc_utils.$(OBJEXT)
+am_timeflow_OBJECTS = timeflow-main.$(OBJEXT) \
+	timeflow-rc_cmd.$(OBJEXT) timeflow-rc_utils.$(OBJEXT) \
+	timeflow-rc_db.$(OBJEXT)
 timeflow_OBJECTS = $(am_timeflow_OBJECTS)
 timeflow_LDADD = $(LDADD)
+timeflow_LINK = $(CCLD) $(timeflow_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -189,8 +192,9 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-timeflow_SOURCES = main.c rc_cmd.c rc_utils.c
-EXTRA_DIST = ./include/rc_cmd.h ./include/rc_type.h ./include/rc_utils.h
+timeflow_SOURCES = main.c rc_cmd.c rc_utils.c rc_db.c
+timeflow_CFLAGS = --std=c99 -lmongoc
+EXTRA_DIST = ./include/rc_cmd.h ./include/rc_type.h ./include/rc_utils.h ./include/rc_db.c
 INCLUDES = -I./include
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -288,7 +292,7 @@ clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 timeflow$(EXEEXT): $(timeflow_OBJECTS) $(timeflow_DEPENDENCIES) $(EXTRA_timeflow_DEPENDENCIES) 
 	@rm -f timeflow$(EXEEXT)
-	$(LINK) $(timeflow_OBJECTS) $(timeflow_LDADD) $(LIBS)
+	$(timeflow_LINK) $(timeflow_OBJECTS) $(timeflow_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -296,9 +300,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ./$(DEPDIR)/main.Po
-include ./$(DEPDIR)/rc_cmd.Po
-include ./$(DEPDIR)/rc_utils.Po
+include ./$(DEPDIR)/timeflow-main.Po
+include ./$(DEPDIR)/timeflow-rc_cmd.Po
+include ./$(DEPDIR)/timeflow-rc_db.Po
+include ./$(DEPDIR)/timeflow-rc_utils.Po
 
 .c.o:
 	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -313,6 +318,62 @@ include ./$(DEPDIR)/rc_utils.Po
 #	source='$<' object='$@' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(COMPILE) -c `$(CYGPATH_W) '$<'`
+
+timeflow-main.o: main.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -MT timeflow-main.o -MD -MP -MF $(DEPDIR)/timeflow-main.Tpo -c -o timeflow-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
+	$(am__mv) $(DEPDIR)/timeflow-main.Tpo $(DEPDIR)/timeflow-main.Po
+#	source='main.c' object='timeflow-main.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -c -o timeflow-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
+
+timeflow-main.obj: main.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -MT timeflow-main.obj -MD -MP -MF $(DEPDIR)/timeflow-main.Tpo -c -o timeflow-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
+	$(am__mv) $(DEPDIR)/timeflow-main.Tpo $(DEPDIR)/timeflow-main.Po
+#	source='main.c' object='timeflow-main.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -c -o timeflow-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
+
+timeflow-rc_cmd.o: rc_cmd.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -MT timeflow-rc_cmd.o -MD -MP -MF $(DEPDIR)/timeflow-rc_cmd.Tpo -c -o timeflow-rc_cmd.o `test -f 'rc_cmd.c' || echo '$(srcdir)/'`rc_cmd.c
+	$(am__mv) $(DEPDIR)/timeflow-rc_cmd.Tpo $(DEPDIR)/timeflow-rc_cmd.Po
+#	source='rc_cmd.c' object='timeflow-rc_cmd.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -c -o timeflow-rc_cmd.o `test -f 'rc_cmd.c' || echo '$(srcdir)/'`rc_cmd.c
+
+timeflow-rc_cmd.obj: rc_cmd.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -MT timeflow-rc_cmd.obj -MD -MP -MF $(DEPDIR)/timeflow-rc_cmd.Tpo -c -o timeflow-rc_cmd.obj `if test -f 'rc_cmd.c'; then $(CYGPATH_W) 'rc_cmd.c'; else $(CYGPATH_W) '$(srcdir)/rc_cmd.c'; fi`
+	$(am__mv) $(DEPDIR)/timeflow-rc_cmd.Tpo $(DEPDIR)/timeflow-rc_cmd.Po
+#	source='rc_cmd.c' object='timeflow-rc_cmd.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -c -o timeflow-rc_cmd.obj `if test -f 'rc_cmd.c'; then $(CYGPATH_W) 'rc_cmd.c'; else $(CYGPATH_W) '$(srcdir)/rc_cmd.c'; fi`
+
+timeflow-rc_utils.o: rc_utils.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -MT timeflow-rc_utils.o -MD -MP -MF $(DEPDIR)/timeflow-rc_utils.Tpo -c -o timeflow-rc_utils.o `test -f 'rc_utils.c' || echo '$(srcdir)/'`rc_utils.c
+	$(am__mv) $(DEPDIR)/timeflow-rc_utils.Tpo $(DEPDIR)/timeflow-rc_utils.Po
+#	source='rc_utils.c' object='timeflow-rc_utils.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -c -o timeflow-rc_utils.o `test -f 'rc_utils.c' || echo '$(srcdir)/'`rc_utils.c
+
+timeflow-rc_utils.obj: rc_utils.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -MT timeflow-rc_utils.obj -MD -MP -MF $(DEPDIR)/timeflow-rc_utils.Tpo -c -o timeflow-rc_utils.obj `if test -f 'rc_utils.c'; then $(CYGPATH_W) 'rc_utils.c'; else $(CYGPATH_W) '$(srcdir)/rc_utils.c'; fi`
+	$(am__mv) $(DEPDIR)/timeflow-rc_utils.Tpo $(DEPDIR)/timeflow-rc_utils.Po
+#	source='rc_utils.c' object='timeflow-rc_utils.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -c -o timeflow-rc_utils.obj `if test -f 'rc_utils.c'; then $(CYGPATH_W) 'rc_utils.c'; else $(CYGPATH_W) '$(srcdir)/rc_utils.c'; fi`
+
+timeflow-rc_db.o: rc_db.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -MT timeflow-rc_db.o -MD -MP -MF $(DEPDIR)/timeflow-rc_db.Tpo -c -o timeflow-rc_db.o `test -f 'rc_db.c' || echo '$(srcdir)/'`rc_db.c
+	$(am__mv) $(DEPDIR)/timeflow-rc_db.Tpo $(DEPDIR)/timeflow-rc_db.Po
+#	source='rc_db.c' object='timeflow-rc_db.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -c -o timeflow-rc_db.o `test -f 'rc_db.c' || echo '$(srcdir)/'`rc_db.c
+
+timeflow-rc_db.obj: rc_db.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -MT timeflow-rc_db.obj -MD -MP -MF $(DEPDIR)/timeflow-rc_db.Tpo -c -o timeflow-rc_db.obj `if test -f 'rc_db.c'; then $(CYGPATH_W) 'rc_db.c'; else $(CYGPATH_W) '$(srcdir)/rc_db.c'; fi`
+	$(am__mv) $(DEPDIR)/timeflow-rc_db.Tpo $(DEPDIR)/timeflow-rc_db.Po
+#	source='rc_db.c' object='timeflow-rc_db.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -c -o timeflow-rc_db.obj `if test -f 'rc_db.c'; then $(CYGPATH_W) 'rc_db.c'; else $(CYGPATH_W) '$(srcdir)/rc_db.c'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

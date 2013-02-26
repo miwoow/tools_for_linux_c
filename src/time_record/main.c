@@ -2,16 +2,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include "rc_cmd.h"
+#include "rc_db.h"
+#include "rc_utils.h"
 
 #include <time.h>
 
-
 int 
-start_event(const rc_config config, rc_event *event)
+start_event(rc_config config, rc_event *event)
 {
 	strncpy(event->name, config.name, BUF_LEN);
 	time(&(event->s_time));
-	strncpy(event->tag, config.tag, BUF_LEN);
+	event->tags = config.tags;
+	config.tags = NULL;
+
+	event->s_time += 8 * 60 * 60;
+
+	rc_save_event(event);
 
 	return EXIT_SUCCESS;
 }
@@ -32,12 +38,10 @@ main(int argc, char **argv)
 			// start event.
 			start_event(config, &event);
 			p_event(event);
+			free_event(&event);
 			break;
 		case 2:
 		break;
 	}
-	
-	p_config(config);
-
 	return 0;
 }

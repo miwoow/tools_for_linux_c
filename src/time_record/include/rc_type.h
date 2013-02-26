@@ -8,6 +8,11 @@
 #define ACTION_TYPE_NUM 3
 #define BUF_LEN 64
 
+typedef struct _tag
+{
+	char name[BUF_LEN];
+	struct _tag *next;
+}tag;
 
 typedef struct _rc_config
 {
@@ -17,14 +22,14 @@ typedef struct _rc_config
 	time_t from;
 	time_t to;
 	int type;
-	char tag[BUF_LEN];
+	tag *tags;
 	char name[BUF_LEN];
 }rc_config;
 
 typedef struct _rc_event
 {
 	char name[BUF_LEN];
-	char tag[BUF_LEN];
+	tag *tags;
 	time_t s_time;
 	time_t e_time;
 	char id[BUF_LEN];
