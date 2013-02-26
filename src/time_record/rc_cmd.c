@@ -5,7 +5,7 @@
 #include <getopt.h>
 #include "rc_cmd.h"
 
-char *g_action_type[] = {"none", "start", "end"};
+char *g_action_type[] = {"none", "start", "end", "list"};
 
 int
 rc_parse_cmd(int argc, char **argv, rc_config *config)
@@ -43,7 +43,6 @@ rc_parse_cmd(int argc, char **argv, rc_config *config)
 			case 'n':
 				strncpy(config->name, optarg, BUF_LEN);
 				break;
-
 			default:
 				break;
 		}

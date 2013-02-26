@@ -69,7 +69,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_timeflow_OBJECTS = timeflow-main.$(OBJEXT) \
 	timeflow-rc_cmd.$(OBJEXT) timeflow-rc_utils.$(OBJEXT) \
-	timeflow-rc_db.$(OBJEXT) timeflow-ks_log.$(OBJEXT)
+	timeflow-rc_db.$(OBJEXT) timeflow-ks_log.$(OBJEXT) \
+	timeflow-rc_action.$(OBJEXT)
 timeflow_OBJECTS = $(am_timeflow_OBJECTS)
 timeflow_LDADD = $(LDADD)
 timeflow_LINK = $(CCLD) $(timeflow_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
@@ -133,7 +134,7 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LDFLAGS = 
 LIBOBJS = 
-LIBS = 
+LIBS = -lmongoc 
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} /home/xudong/mygit/tools_for_linux_c/src/time_record/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
@@ -192,9 +193,9 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-timeflow_SOURCES = main.c rc_cmd.c rc_utils.c rc_db.c ks_log.c
+timeflow_SOURCES = main.c rc_cmd.c rc_utils.c rc_db.c ks_log.c rc_action.c
 timeflow_CFLAGS = --std=c99 -lmongoc
-EXTRA_DIST = ./include/rc_cmd.h ./include/rc_type.h ./include/rc_utils.h ./include/rc_db.c ./include/ks_log.h
+EXTRA_DIST = ./include/rc_cmd.h ./include/rc_type.h ./include/rc_utils.h ./include/rc_db.c ./include/ks_log.h ./include/rc_action.h
 INCLUDES = -I./include
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -302,6 +303,7 @@ distclean-compile:
 
 include ./$(DEPDIR)/timeflow-ks_log.Po
 include ./$(DEPDIR)/timeflow-main.Po
+include ./$(DEPDIR)/timeflow-rc_action.Po
 include ./$(DEPDIR)/timeflow-rc_cmd.Po
 include ./$(DEPDIR)/timeflow-rc_db.Po
 include ./$(DEPDIR)/timeflow-rc_utils.Po
@@ -389,6 +391,20 @@ timeflow-ks_log.obj: ks_log.c
 #	source='ks_log.c' object='timeflow-ks_log.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -c -o timeflow-ks_log.obj `if test -f 'ks_log.c'; then $(CYGPATH_W) 'ks_log.c'; else $(CYGPATH_W) '$(srcdir)/ks_log.c'; fi`
+
+timeflow-rc_action.o: rc_action.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -MT timeflow-rc_action.o -MD -MP -MF $(DEPDIR)/timeflow-rc_action.Tpo -c -o timeflow-rc_action.o `test -f 'rc_action.c' || echo '$(srcdir)/'`rc_action.c
+	$(am__mv) $(DEPDIR)/timeflow-rc_action.Tpo $(DEPDIR)/timeflow-rc_action.Po
+#	source='rc_action.c' object='timeflow-rc_action.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -c -o timeflow-rc_action.o `test -f 'rc_action.c' || echo '$(srcdir)/'`rc_action.c
+
+timeflow-rc_action.obj: rc_action.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -MT timeflow-rc_action.obj -MD -MP -MF $(DEPDIR)/timeflow-rc_action.Tpo -c -o timeflow-rc_action.obj `if test -f 'rc_action.c'; then $(CYGPATH_W) 'rc_action.c'; else $(CYGPATH_W) '$(srcdir)/rc_action.c'; fi`
+	$(am__mv) $(DEPDIR)/timeflow-rc_action.Tpo $(DEPDIR)/timeflow-rc_action.Po
+#	source='rc_action.c' object='timeflow-rc_action.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(timeflow_CFLAGS) $(CFLAGS) -c -o timeflow-rc_action.obj `if test -f 'rc_action.c'; then $(CYGPATH_W) 'rc_action.c'; else $(CYGPATH_W) '$(srcdir)/rc_action.c'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

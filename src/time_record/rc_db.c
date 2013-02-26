@@ -41,6 +41,7 @@ _eventobj_to_bson(const rc_event *event, bson *b)
 	bson_append_finish_array(b);
 	bson_append_time_t(b, "s_time", event->s_time);
 	bson_append_time_t(b, "e_time", event->e_time);
+	bson_append_int(b, "status", event->status);
 	bson_finish(b);
 }
 
@@ -53,6 +54,8 @@ rc_save_event(const rc_event *event)
 	mongo_insert(&conn, "rc_life.rc_event", &b, NULL);
 	return 0;
 }
+
+
 
 
 void _dis_conn()
