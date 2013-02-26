@@ -32,6 +32,7 @@ main(int argc, char **argv)
 		case 3:
 			// list
 			rc_list_event(&config);
+			printf("end of list\n");
 			break;
 		default:
 			break;

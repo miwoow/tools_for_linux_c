@@ -1,12 +1,12 @@
 #include "rc_db.h"
+#include <time.h>
 
 
 static char *mongo_host="127.0.0.1";
 static unsigned int mongo_port=27017;
 static mongo conn;
 static mongo_write_concern concern;
-static char *db_name = "rc_life";
-static char *cllection_name = "rc_event";
+static char *ns = "rc_life.rc_event";
 
 void
 _conn() {
@@ -51,12 +51,78 @@ rc_save_event(const rc_event *event)
 	bson b;
 	_conn();
 	_eventobj_to_bson(event, &b);
-	mongo_insert(&conn, "rc_life.rc_event", &b, NULL);
+	mongo_insert(&conn, ns, &b, NULL);
+	bson_destroy(&b);
 	return 0;
 }
 
 
+void
+rc_query_event(rc_config *config)
+{
+	bson query, sub;
+	mongo_cursor cursor;
+	char hex_oid[25];
+	char time_str[BUF_LEN];
+	time_t tt;
 
+	_conn();
+
+	bson_init(&query);
+	bson_append_int(&query, "status", 0);
+	bson_finish(&query);
+
+	mongo_cursor_init(&cursor, &conn, ns);
+	mongo_cursor_set_query( &cursor, &query);
+	while(mongo_cursor_next(&cursor) == MONGO_OK) {
+		bson_iterator it, it2;
+		bson_iterator_init( &it, mongo_cursor_bson( &cursor ));
+		while (bson_iterator_next(&it)) {
+			printf("%s : ", bson_iterator_key( &it ));
+			switch( bson_iterator_type( &it )) {
+				case BSON_INT:
+					printf("%d\n", bson_iterator_int( &it ));
+					break;
+				case BSON_STRING:
+					printf("%s\n", bson_iterator_string( &it ));
+					break;
+				case BSON_OID:
+					bson_oid_to_string(bson_iterator_oid( &it ), hex_oid);
+					printf("%s\n", hex_oid);
+					break;
+				case BSON_ARRAY:
+					bson_iterator_subobject(&it, &sub);
+					bson_iterator_init( &it2, &sub);
+					while (bson_iterator_next( &it2 )) {
+						switch (bson_iterator_type( &it2 )) {
+							case BSON_STRING:
+								printf("\n-->%s\n", bson_iterator_string( &it2 ));
+								break;
+							default:
+								printf("\n--->other\n");
+								break;
+						}
+					}
+					break;
+				case BSON_OBJECT:
+					printf("bson object\n");
+					break;
+				case BSON_TIMESTAMP:
+					printf("bson timestamp.\n");
+					break;
+				case BSON_DATE:
+					tt = bson_iterator_date( &it );
+					rc_trans_time(tt, time_str);
+					printf("%s\n", time_str);
+					break;
+				default:
+					printf("other type\n");
+			}
+		}
+	}
+	bson_destroy( &query );
+	mongo_cursor_destroy( &cursor );
+}
 
 void _dis_conn()
 {
