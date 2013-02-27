@@ -14,9 +14,9 @@ rc_parse_cmd(int argc, char **argv, rc_config *config)
 	tag *one_tag;
 	int option_index;
 	static struct option long_options[] = {
-		{"action", required_argument, 0, 0},
-		{"tag", required_argument, 0, 0},
-		{"name", required_argument, 0, 0},
+		{"action", required_argument, NULL, 'a'},
+		{"tag", required_argument, NULL, 'g'},
+		{"name", required_argument, NULL, 'n'},
 		{0, 0, 0, 0}
 	};
 

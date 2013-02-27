@@ -1,4 +1,5 @@
 #include "rc_db.h"
+#include "rc_utils.h"
 #include <time.h>
 
 
@@ -63,7 +64,7 @@ rc_query_event(rc_config *config)
 	bson query, sub;
 	mongo_cursor cursor;
 	char hex_oid[25];
-	char time_str[BUF_LEN];
+	char time_str[BUF_LEN] = {0};
 	time_t tt;
 
 	_conn();
@@ -112,7 +113,7 @@ rc_query_event(rc_config *config)
 					break;
 				case BSON_DATE:
 					tt = bson_iterator_date( &it );
-					rc_trans_time(tt, time_str);
+					rc_trans_time(tt/1000, time_str);
 					printf("%s\n", time_str);
 					break;
 				default:
