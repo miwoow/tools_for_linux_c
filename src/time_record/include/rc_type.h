@@ -5,10 +5,10 @@
 
 #define EVENT_TYPE_RUNNING 0
 #define EVENT_TYPE_PARENT_CHILD 1
-#define ACTION_TYPE_NUM 4
+#define ACTION_TYPE_NUM 7
 #define BUF_LEN 64
 
-typedef enum _EVENT_STATUS { RUNNING, DONE, PARCHILD } EVENT_STATUS;
+typedef enum _EVENT_STATUS { RUNNING, DONE, PARCHILD, ALL } EVENT_STATUS;
 
 typedef struct _tag
 {

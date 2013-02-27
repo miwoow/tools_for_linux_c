@@ -70,7 +70,9 @@ rc_query_event(rc_config *config)
 	_conn();
 
 	bson_init(&query);
-	bson_append_int(&query, "status", config->status);
+	if (config->status != ALL) {
+		bson_append_int(&query, "status", config->status);
+	}
 	bson_finish(&query);
 
 	mongo_cursor_init(&cursor, &conn, ns);
@@ -120,6 +122,7 @@ rc_query_event(rc_config *config)
 					printf("other type\n");
 			}
 		}
+		printf("======================================================\n");
 	}
 	bson_destroy( &query );
 	mongo_cursor_destroy( &cursor );
@@ -146,6 +149,8 @@ void rc_update_event(rc_config *config)
 
 	bson_init(&cond);
 	bson_append_oid(&cond, "_id", &oid);
+	//bson_append_int(&cond, "status", 0);
+	// TODO: if there is no such event. print info.
 	bson_finish(&cond);
 	
 	bson_init(&op);
@@ -164,4 +169,48 @@ void rc_update_event(rc_config *config)
 	}
 
 	bson_destroy(&cond);
+	bson_destroy(&op);
+}
+
+int
+rc_mod_add_tag(rc_config *config)
+{
+	bson cond, op;
+	bson_oid_t oid;
+	time_t end_time;
+	tag *tmp_tag;
+	int i;
+	char index[8]={0};
+
+	_conn();
+
+	bson_oid_from_string(&oid, config->eid);
+
+	bson_init(&cond);
+	bson_append_oid(&cond, "_id", &oid);
+	bson_finish(&cond);
+	
+	bson_init(&op);
+	{
+		bson_append_start_object( &op, "$pushAll");
+		bson_append_start_array( &op, "tags");
+		tmp_tag = config->tags;
+		i=0;
+		while(tmp_tag) {
+			snprintf(index, 8, "%d", i++);
+			bson_append_string(&op, index, tmp_tag->name);
+			tmp_tag = tmp_tag->next;
+		}
+		bson_append_finish_array(&op);
+		bson_append_finish_object( &op );
+	}
+	bson_finish(&op);
+	mongo_clear_errors(&conn);
+	
+	if (mongo_update(&conn, ns, &cond, &op, 0, NULL) == MONGO_ERROR) {
+		printf("error:%d: %s\n", conn.errcode, conn.errstr);
+	}
+
+	bson_destroy(&cond);
+	bson_destroy(&op);
 }

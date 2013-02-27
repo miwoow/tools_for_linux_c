@@ -5,10 +5,10 @@
 #include <getopt.h>
 #include "rc_cmd.h"
 
-#define G_EVENT_STATUS_LEN 3
+#define G_EVENT_STATUS_LEN 4
 
-char *g_action_type[] = {"none", "start", "end", "list"};
-char *g_event_status[] = {"running", "done", "pchild"};
+char *g_action_type[] = {"none", "new", "end", "list", "newi", "atag", "dtag" };
+char *g_event_status[] = {"running", "done", "pchild", "all"};
 
 int
 rc_parse_cmd(int argc, char **argv, rc_config *config)

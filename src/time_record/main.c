@@ -18,6 +18,7 @@ main(int argc, char **argv)
 	memset(&event, 0, sizeof(rc_event));
 	rc_parse_cmd(argc, argv, &config);
 
+
 	switch(config.action) {
 		case 0:
 			break;
@@ -33,7 +34,17 @@ main(int argc, char **argv)
 		case 3:
 			// list
 			rc_list_event(&config);
-			printf("end of list\n");
+			break;
+		case 4:
+			// start immediate event
+			rc_starti_event(&config, &event);
+			break;
+		case 5:
+			// add tag
+			rc_add_tag(&config);
+			break;
+		case 6:
+			// del tag
 			break;
 		default:
 			break;
