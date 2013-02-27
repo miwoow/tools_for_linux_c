@@ -25,9 +25,10 @@ main(int argc, char **argv)
 			// start event.
 			rc_start_event(&config, &event);
 			p_event(event);
-			free_event(&event);
 			break;
 		case 2:
+			// end event
+			rc_end_event(&config);
 			break;
 		case 3:
 			// list
@@ -37,6 +38,7 @@ main(int argc, char **argv)
 		default:
 			break;
 	}
+	free_event(&event);
 	ks_log_exit();
 	return 0;
 }

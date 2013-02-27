@@ -8,7 +8,7 @@
 #define ACTION_TYPE_NUM 4
 #define BUF_LEN 64
 
-typedef enum _EVENT_STATUS { RUNNING, PARCHILD } EVENT_STATUS;
+typedef enum _EVENT_STATUS { RUNNING, DONE, PARCHILD } EVENT_STATUS;
 
 typedef struct _tag
 {
@@ -26,6 +26,7 @@ typedef struct _rc_config
 	int type;
 	tag *tags;
 	char name[BUF_LEN];
+	int status;
 }rc_config;
 
 typedef struct _rc_event

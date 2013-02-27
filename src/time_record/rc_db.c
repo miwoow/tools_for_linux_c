@@ -70,7 +70,7 @@ rc_query_event(rc_config *config)
 	_conn();
 
 	bson_init(&query);
-	bson_append_int(&query, "status", 0);
+	bson_append_int(&query, "status", config->status);
 	bson_finish(&query);
 
 	mongo_cursor_init(&cursor, &conn, ns);
@@ -131,4 +131,37 @@ void _dis_conn()
 		mongo_write_concern_destroy(&concern);
 		mongo_destroy(&conn);
 	}
+}
+
+void rc_update_event(rc_config *config)
+{
+	// end event
+	bson cond, op;
+	bson_oid_t oid;
+	time_t end_time;
+
+	_conn();
+
+	bson_oid_from_string(&oid, config->eid);
+
+	bson_init(&cond);
+	bson_append_oid(&cond, "_id", &oid);
+	bson_finish(&cond);
+	
+	bson_init(&op);
+	{
+		bson_append_start_object( &op, "$set");
+		bson_append_int( &op, "status", 1);
+		time(&end_time);
+		bson_append_time_t(&op , "e_time", end_time);
+		bson_append_finish_object( &op );
+	}
+	bson_finish(&op);
+	mongo_clear_errors(&conn);
+	
+	if (mongo_update(&conn, ns, &cond, &op, 0, NULL) == MONGO_ERROR) {
+		printf("error:%d: %s\n", conn.errcode, conn.errstr);
+	}
+
+	bson_destroy(&cond);
 }
