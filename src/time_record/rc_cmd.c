@@ -59,6 +59,10 @@ rc_parse_cmd(int argc, char **argv, rc_config *config)
 				strncpy(config->eid, optarg, BUF_LEN);
 				break;
 			case 'g':
+				if (strlen(optarg) > BUF_LEN) {
+					printf("tag name too long. < %d\n", BUF_LEN);
+					break;
+				}
 				one_tag = (tag *)malloc(sizeof(tag));
 				strncpy(one_tag->name, optarg, BUF_LEN);
 				one_tag->next = config->tags;

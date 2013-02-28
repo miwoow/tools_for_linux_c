@@ -47,6 +47,7 @@ typedef struct _rc_event
 	EVENT_STATUS status;
 	char peid[BUF_LEN];
 	line *desc;
+	time_t use_time; //这个事件花费了多少时间
 }rc_event;
 
 #endif

@@ -278,3 +278,14 @@ int rc_mod_add_desc(rc_config *config)
 	bson_destroy(&op);
 	return EXIT_SUCCESS;
 }
+
+int rc_get_event(const char *eid)
+{
+	bson query;
+
+	bson_init(&query);
+	bson_finish(&query);
+
+	bson_destroy(&query);
+	return EXIT_SUCCESS;
+}
