@@ -46,6 +46,21 @@ main(int argc, char **argv)
 		case 6:
 			// del tag
 			break;
+		case 7:
+			// new child 
+			rc_new_child(&config, &event);
+			break;
+		case 8:
+			// end child
+			rc_end_child(&config, &event);
+			break;
+		case 9:
+			// del event
+			rc_del_event(&config);
+			break;
+		case 10:
+			rc_add_desc(&config);
+			break;
 		default:
 			break;
 	}

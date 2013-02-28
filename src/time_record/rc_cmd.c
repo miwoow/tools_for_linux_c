@@ -7,7 +7,7 @@
 
 #define G_EVENT_STATUS_LEN 4
 
-char *g_action_type[] = {"none", "new", "end", "list", "newi", "atag", "dtag" };
+char *g_action_type[] = {"none", "new", "end", "list", "newi", "atag", "dtag", "newc", "endc"/*这个暂时没用，endc和end是一样的*/, "del", "adesc" };
 char *g_event_status[] = {"running", "done", "pchild", "all"};
 
 int
@@ -22,11 +22,13 @@ rc_parse_cmd(int argc, char **argv, rc_config *config)
 		{"name", required_argument, NULL, 'n'},
 		{"type", required_argument, NULL, 'b'},
 		{"eid", required_argument, NULL, 'e'},
+		{"peid", required_argument, NULL, 'p'},
+		{"desc", required_argument, NULL, 'd'},
 		{0, 0, 0, 0}
 	};
 
 	while(1) {
-		c = getopt_long(argc, argv, "a:g:n:b:e:", long_options, &option_index);
+		c = getopt_long(argc, argv, "a:d:g:n:b:e:p:", long_options, &option_index);
 		if (c == -1) {
 			break;
 		}
@@ -39,6 +41,9 @@ rc_parse_cmd(int argc, char **argv, rc_config *config)
 					}
 				} 
 				break;
+			case 'd':
+				strncpy(config->desc, optarg, LINE_LEN);
+				break;
 			case 'b':
 				for (i=0; i< G_EVENT_STATUS_LEN; i++) {
 					if (strcasecmp(optarg, g_event_status[i]) == 0) {
@@ -46,6 +51,9 @@ rc_parse_cmd(int argc, char **argv, rc_config *config)
 						break;
 					}
 				}
+				break;
+			case 'p':
+				strncpy(config->peid, optarg, BUF_LEN);
 				break;
 			case 'e':
 				strncpy(config->eid, optarg, BUF_LEN);

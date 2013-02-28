@@ -42,6 +42,7 @@ _eventobj_to_bson(const rc_event *event, bson *b)
 	bson_append_finish_array(b);
 	bson_append_time_t(b, "s_time", event->s_time);
 	bson_append_time_t(b, "e_time", event->e_time);
+	bson_append_string(b, "peid", event->peid);
 	bson_append_int(b, "status", event->status);
 	bson_finish(b);
 }
@@ -52,7 +53,9 @@ rc_save_event(const rc_event *event)
 	bson b;
 	_conn();
 	_eventobj_to_bson(event, &b);
-	mongo_insert(&conn, ns, &b, NULL);
+	if (mongo_insert(&conn, ns, &b, NULL) == MONGO_ERROR) {
+		printf("error: %s\n", conn.errstr);
+	}
 	bson_destroy(&b);
 	return 0;
 }
@@ -66,6 +69,7 @@ rc_query_event(rc_config *config)
 	char hex_oid[25];
 	char time_str[BUF_LEN] = {0};
 	time_t tt;
+	int event_count=0;
 
 	_conn();
 
@@ -99,13 +103,14 @@ rc_query_event(rc_config *config)
 					while (bson_iterator_next( &it2 )) {
 						switch (bson_iterator_type( &it2 )) {
 							case BSON_STRING:
-								printf("\n-->%s\n", bson_iterator_string( &it2 ));
+								printf("%s, ", bson_iterator_string( &it2 ));
 								break;
 							default:
-								printf("\n--->other\n");
+								printf("\nError: other tag type.\n");
 								break;
 						}
 					}
+					printf("\n");
 					break;
 				case BSON_OBJECT:
 					printf("bson object\n");
@@ -123,7 +128,9 @@ rc_query_event(rc_config *config)
 			}
 		}
 		printf("======================================================\n");
+		event_count++;
 	}
+	printf("Count Num: %d\n", event_count);
 	bson_destroy( &query );
 	mongo_cursor_destroy( &cursor );
 }
@@ -213,4 +220,61 @@ rc_mod_add_tag(rc_config *config)
 
 	bson_destroy(&cond);
 	bson_destroy(&op);
+	return EXIT_SUCCESS;
+}
+
+int
+rc_mod_del_event(rc_config *config)
+{
+	bson cond;
+	bson_oid_t moid;
+
+	_conn();
+
+	bson_oid_from_string(&moid, config->eid);
+
+	bson_init(&cond);
+	bson_append_oid(&cond, "_id", &moid);
+	bson_finish(&cond);
+	
+	if (mongo_remove(&conn, ns, &cond, NULL) == MONGO_ERROR) {
+		printf("ERROR: %s\n", conn.errstr);
+	}
+
+	bson_destroy(&cond);
+	return EXIT_SUCCESS;
+}
+
+int rc_mod_add_desc(rc_config *config)
+{
+	bson cond, op;
+	bson_oid_t oid;
+	time_t end_time;
+	int i;
+	char index[8]={0};
+
+	_conn();
+
+	bson_oid_from_string(&oid, config->eid);
+
+	bson_init(&cond);
+	bson_append_oid(&cond, "_id", &oid);
+	bson_finish(&cond);
+	
+	bson_init(&op);
+	{
+		bson_append_start_object( &op, "$addToSet");
+		bson_append_string(&op, "desc", config->desc);
+		bson_append_finish_object( &op );
+	}
+	bson_finish(&op);
+	mongo_clear_errors(&conn);
+	
+	if (mongo_update(&conn, ns, &cond, &op, 0, NULL) == MONGO_ERROR) {
+		printf("error:%d: %s\n", conn.errcode, conn.errstr);
+	}
+
+	bson_destroy(&cond);
+	bson_destroy(&op);
+	return EXIT_SUCCESS;
 }

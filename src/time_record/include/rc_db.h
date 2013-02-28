@@ -11,6 +11,8 @@ void _eventobj_to_bson(const rc_event *event, bson *b);
 void rc_query_event(rc_config *config);
 void rc_update_event(rc_config *config);
 int rc_mod_add_tag(rc_config *config);
+int rc_mod_del_event(rc_config *config);
+int rc_mod_add_desc(rc_config *config);
 
 
 #endif

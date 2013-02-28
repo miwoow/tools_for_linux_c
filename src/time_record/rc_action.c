@@ -52,3 +52,31 @@ int rc_add_tag(rc_config *config)
 	rc_mod_add_tag(config);
 	return EXIT_SUCCESS;
 }
+int 
+rc_new_child(rc_config *config, rc_event *event)
+{
+	rc_gen_event(config, event);
+	strncpy(event->peid, config->peid, BUF_LEN);
+	rc_save_event(event);
+	return EXIT_SUCCESS;
+}
+
+int 
+rc_end_child(rc_config *config, rc_event *event)
+{
+	return EXIT_SUCCESS;
+}
+
+int 
+rc_del_event(rc_config *config)
+{
+	rc_mod_del_event(config);
+	return EXIT_SUCCESS;
+}
+
+int
+rc_add_desc(rc_config *config)
+{
+	rc_mod_add_desc(config);
+	return EXIT_SUCCESS;
+}

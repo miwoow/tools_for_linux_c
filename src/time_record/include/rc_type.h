@@ -5,8 +5,9 @@
 
 #define EVENT_TYPE_RUNNING 0
 #define EVENT_TYPE_PARENT_CHILD 1
-#define ACTION_TYPE_NUM 7
+#define ACTION_TYPE_NUM 11
 #define BUF_LEN 64
+#define LINE_LEN 512
 
 typedef enum _EVENT_STATUS { RUNNING, DONE, PARCHILD, ALL } EVENT_STATUS;
 
@@ -15,6 +16,12 @@ typedef struct _tag
 	char name[BUF_LEN];
 	struct _tag *next;
 }tag;
+
+typedef struct _line
+{
+	char content[LINE_LEN];
+	struct _line *next;
+}line;
 
 typedef struct _rc_config
 {
@@ -27,6 +34,7 @@ typedef struct _rc_config
 	tag *tags;
 	char name[BUF_LEN];
 	int status;
+	char desc[LINE_LEN];
 }rc_config;
 
 typedef struct _rc_event
@@ -37,6 +45,8 @@ typedef struct _rc_event
 	time_t e_time;
 	char id[BUF_LEN];
 	EVENT_STATUS status;
+	char peid[BUF_LEN];
+	line *desc;
 }rc_event;
 
 #endif
