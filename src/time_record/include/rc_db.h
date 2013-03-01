@@ -14,7 +14,8 @@ int rc_mod_add_tag(rc_config *config);
 int rc_mod_del_event(rc_config *config);
 int rc_mod_add_desc(rc_config *config);
 
-int rc_get_event(const char *eid);
+int rc_get_event(const char *eid, rc_event *e);
+int rc_iterator_to_event(bson_iterator *it, rc_event *e);
 
 
 #endif

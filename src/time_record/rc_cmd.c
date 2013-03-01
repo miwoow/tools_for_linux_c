@@ -24,11 +24,12 @@ rc_parse_cmd(int argc, char **argv, rc_config *config)
 		{"eid", required_argument, NULL, 'e'},
 		{"peid", required_argument, NULL, 'p'},
 		{"desc", required_argument, NULL, 'd'},
+		{"day", required_argument, NULL, 'y'},
 		{0, 0, 0, 0}
 	};
 
 	while(1) {
-		c = getopt_long(argc, argv, "a:d:g:n:b:e:p:", long_options, &option_index);
+		c = getopt_long(argc, argv, "a:d:g:n:b:e:p:y:", long_options, &option_index);
 		if (c == -1) {
 			break;
 		}
@@ -43,6 +44,10 @@ rc_parse_cmd(int argc, char **argv, rc_config *config)
 				break;
 			case 'd':
 				strncpy(config->desc, optarg, LINE_LEN);
+				break;
+			case 'y':
+			    // list which day's info
+				config->day = atoi(optarg);
 				break;
 			case 'b':
 				for (i=0; i< G_EVENT_STATUS_LEN; i++) {

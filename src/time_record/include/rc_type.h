@@ -35,6 +35,7 @@ typedef struct _rc_config
 	char name[BUF_LEN];
 	int status;
 	char desc[LINE_LEN];
+	int day; // 0 today -1 yesterday
 }rc_config;
 
 typedef struct _rc_event

@@ -7,6 +7,7 @@ void p_event(rc_event event);
 void p_config(rc_config config);
 int rc_trans_time(time_t time, char *time_str);
 void free_event(rc_event *event);
+void p_time_spin(struct tm *ttm);
 
 
 #endif

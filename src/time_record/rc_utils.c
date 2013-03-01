@@ -33,3 +33,23 @@ free_event(rc_event *event)
 		tmp_tag = tmp_tag->next;
 	}
 }
+
+void p_time_spin(struct tm *ttm)
+{
+	int day = ttm->tm_mday-1;
+	int hour = ttm->tm_hour;
+	int min = ttm->tm_min;
+	int sec = ttm->tm_sec;
+
+	if (day > 0) {
+		printf("%d天", day);
+	}
+	if (hour > 0) {
+		printf("%d时", hour);
+	}
+	if (min > 0) {
+		printf("%d分", min);
+	}
+	printf("%d秒\n", sec);
+}
+
