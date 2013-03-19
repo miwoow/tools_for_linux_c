@@ -79,8 +79,7 @@ rc_query_event(rc_config *config)
 	if (config->status != ALL) {
 		bson_append_int(&query, "status", config->status);
 	}
-	/*
-	bson_append_start_object( &query, "$gte" );
+	bson_append_start_object( &query, "s_time" );
 	time(&tt);
 	t_gm_time = gmtime(&tt);
 	t_gm_time->tm_mday += config->day;
@@ -88,9 +87,9 @@ rc_query_event(rc_config *config)
 	t_gm_time->tm_min = 0;
 	t_gm_time->tm_sec = 0;
 	tt = mktime(t_gm_time);
-	bson_append_time_t( &query, "s_time", tt );
+	bson_append_time_t( &query, "$gte", tt );
 	bson_append_finish_object( &query );
-	*/
+	
 	bson_finish(&query);
 
 	mongo_cursor_init(&cursor, &conn, ns);
